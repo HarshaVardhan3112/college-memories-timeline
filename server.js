@@ -19,6 +19,12 @@ mongoose.connect(process.env.MONGODB_URI)
 // Event model
 const Event = require('./models/Event');
 
+// Root route (GET /)
+app.get('/', (req, res) => {
+  res.send('Welcome to the College Memories Timeline API');
+});
+
+
 // API routes
 app.get('/api/timeline', async (req, res) => {
   try {
