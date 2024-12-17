@@ -44,7 +44,8 @@ app.post('/api/timeline', async (req, res) => {
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {
-    res.status(400).json({ message: 'Error adding event' });
+    console.error(error);  // Log the actual error
+    res.status(400).json({ message: 'Error adding event', error: error.message });
   }
 });
 
