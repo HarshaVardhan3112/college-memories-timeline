@@ -2,7 +2,7 @@
 // Function to fetch and display events
 const fetchEvents = async () => {
   try {
-    const response = await fetch('https://college-memories-timeline.onrender.com');
+    const response = await fetch('https://college-memories-timeline.onrender.com/api/timeline');
     const events = await response.json();
 
     const eventsContainer = document.getElementById('eventsContainer');
@@ -92,7 +92,7 @@ const addEvent = async (event) => {
   const eventDate = document.getElementById('eventDate').value;
 
   try {
-    const response = await fetch('https://college-memories-timeline.onrender.com', {
+    const response = await fetch('https://college-memories-timeline.onrender.com/api/timeline', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const addEvent = async (event) => {
 // Function to delete an event
 const deleteEvent = async (eventId) => {
   try {
-    const response = await fetch(`https://college-memories-timeline.onrender.com/${eventId}`, {
+    const response = await fetch(`https://college-memories-timeline.onrender.com/api/timeline/${eventId}`, {
       method: 'DELETE',
     });
     const deletedEvent = await response.json();
