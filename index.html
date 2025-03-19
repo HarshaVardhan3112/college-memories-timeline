@@ -11,17 +11,44 @@
 <body>
   <h1>Online Interactive Timeline</h1>
 
+  <!-- Search Bar (will be dynamically enhanced by JavaScript) -->
+  <div id="searchContainer"></div>
+
+  <!-- Filter Controls (will be dynamically added by JavaScript) -->
+  <div id="filterControls"></div>
+
   <!-- Section to display events dynamically -->
   <div class="timeline" id="eventsContainer">
     <!-- Events will be dynamically loaded here -->
   </div>
 
-
   <!-- Form to add new event -->
-  <div id="addEventForm">
-    <input type="text" id="eventTitle" placeholder="Event Title" required />
-    <input type="date" id="eventDate" required />
-    <button id="addEventButton">Add Event</button>
+  <form id="addEventForm">
+    <div class="input-wrapper">
+      <input type="text" id="eventTitle" placeholder="Event Title" required />
+    </div>
+    <div class="input-wrapper">
+      <input type="date" id="eventDate" required />
+    </div>
+    <button type="submit" id="addEventButton">Add Event</button>
+  </form>
+
+  <!-- Notification Container -->
+  <div id="notification"></div>
+
+  <!-- Event Details Modal -->
+  <div id="eventModal" class="modal">
+    <!-- Modal content will be dynamically loaded here -->
+  </div>
+
+  <!-- Edit Event Modal -->
+  <div id="editEventModal" class="modal">
+    <!-- Modal content will be dynamically loaded here -->
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="confirmModal" class="modal">
+    <!-- Modal content will be dynamically loaded here -->
   </div>
 
   <script src="script.js"></script>

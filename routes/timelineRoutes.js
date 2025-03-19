@@ -1,5 +1,5 @@
 const express = require('express');
-const { getEvents, addEvent, deleteEvent } = require('../controllers/timelineController');
+const { getEvents, addEvent, deleteEvent, updateEvent } = require('../controllers/timelineController');
 const router = express.Router();
 
 // Get all events
@@ -12,3 +12,7 @@ router.post('/', addEvent);
 router.delete('/:id', deleteEvent);
 
 module.exports = router;
+
+// Update an event
+router.put('/:id', updateEvent);
+

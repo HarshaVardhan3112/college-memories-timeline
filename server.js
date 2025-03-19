@@ -36,6 +36,7 @@ app.get('/api/timeline', async (req, res) => {
 });
 
 app.post('/api/timeline', async (req, res) => {
+  console.log(req.body);  // Check the incoming request body
   try {
     const newEvent = new Event({
       eventName: req.body.eventName,
@@ -46,6 +47,29 @@ app.post('/api/timeline', async (req, res) => {
   } catch (error) {
     console.error(error);  // Log the actual error
     res.status(400).json({ message: 'Error adding event', error: error.message });
+  }
+});
+
+// PUT route to update an event
+app.put('/api/timeline/:id', async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const updatedEvent = {
+      eventName: req.body.eventName,
+      date: req.body.date,
+    };
+
+    // Find the event by ID and update it
+    const result = await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);  // Log the actual error
+    res.status(500).json({ message: 'Error updating event', error: error.message });
   }
 });
 

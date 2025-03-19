@@ -6,6 +6,7 @@ exports.getEvents = async (req, res) => {
     const events = await Event.find().sort({ date: 1 });
     res.status(200).json(events);
   } catch (error) {
+    console.error('Error fetching events:', error); // Log the error for debugging
     res.status(500).json({ error: 'Error fetching events' });
   }
 };
@@ -18,6 +19,7 @@ exports.addEvent = async (req, res) => {
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {
+    console.error('Error adding event:', error); // Log the error for debugging
     res.status(400).json({ error: 'Error adding event' });
   }
 };
@@ -32,6 +34,26 @@ exports.deleteEvent = async (req, res) => {
     }
     res.status(200).json(deletedEvent);
   } catch (error) {
+    console.error('Error deleting event:', error); // Log the error for debugging
     res.status(500).json({ error: 'Error deleting event' });
+  }
+};
+
+// Update an event
+exports.updateEvent = async (req, res) => {
+  const { id } = req.params;
+  const { eventName, date } = req.body;
+
+  try {
+    const updatedEvent = await Event.findByIdAndUpdate(id, { eventName, date }, { new: true });
+
+    if (!updatedEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    res.status(200).json(updatedEvent);
+  } catch (error) {
+    console.error('Error updating event:', error); // Log the error for debugging
+    res.status(500).json({ error: 'Failed to update event' });
   }
 };
