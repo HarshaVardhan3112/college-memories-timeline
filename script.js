@@ -1,4 +1,33 @@
-// Enhanced script.js with improved interactivity
+document.addEventListener('DOMContentLoaded', function () {
+  const progressBar = document.getElementById('progressBar');
+  const preloader = document.getElementById('preloader');
+  const mainContent = document.getElementById('mainContent');
+
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 1;
+    progressBar.style.width = progress + '%';
+
+    if (progress >= 100) {
+      clearInterval(interval);
+
+      setTimeout(() => {
+        preloader.style.opacity = '0';
+        mainContent.style.display = 'block';
+
+        // Remove preloader from DOM after fade out
+        setTimeout(() => {
+          preloader.style.display = 'none';
+
+          // Initialize placeholder effects after preloader
+          enhanceForm(); // Ensure this function initializes your floating placeholders
+        }, 500);
+      }, 500);
+    }
+  }, 30);
+});
+
+
 
 // Global variables
 let allEvents = [];
@@ -155,6 +184,25 @@ const displayEvents = () => {
       rowElement.style.transform = 'translateY(0)';
     }, 100 * rowIndex);
   });
+  // Add hover effect for event rows
+  document.querySelectorAll('.event-row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      // Get the previous row
+      const prevRow = row.previousElementSibling;
+      if (prevRow && prevRow.classList.contains('event-row')) {
+        // Add an active class to the previous row
+        prevRow.classList.add('connector-active');
+      }
+    });
+
+    row.addEventListener('mouseleave', () => {
+      // Remove active class from all rows when not hovering
+      document.querySelectorAll('.event-row').forEach(r => {
+        r.classList.remove('connector-active');
+      });
+    });
+  });
+
 };
 
 // Function to update filter display
@@ -779,6 +827,7 @@ const enhanceForm = () => {
     }
   });
 };
+
 
 // Initialize the app
 const initApp = () => {

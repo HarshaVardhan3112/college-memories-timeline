@@ -9,48 +9,67 @@
 </head>
 
 <body>
-  <h1>Online Interactive Timeline</h1>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <h1>Online Interactive Timeline</h1>
 
-  <!-- Search Bar (will be dynamically enhanced by JavaScript) -->
-  <div id="searchContainer"></div>
-
-  <!-- Filter Controls (will be dynamically added by JavaScript) -->
-  <div id="filterControls"></div>
-
-  <!-- Section to display events dynamically -->
-  <div class="timeline" id="eventsContainer">
-    <!-- Events will be dynamically loaded here -->
-  </div>
-
-  <!-- Form to add new event -->
-  <form id="addEventForm">
-    <div class="input-wrapper">
-      <input type="text" id="eventTitle" placeholder="Event Title" required />
+    <div class="class-image-container">
+      <!-- Replace with your actual image path -->
+      <img src="img/IMG_20221009_170143.jpg" alt="Our Class" class="class-image">
     </div>
-    <div class="input-wrapper">
-      <input type="date" id="eventDate" required />
+
+    <div class="loading-text">Loading your timeline...</div>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+      </div>
     </div>
-    <button type="submit" id="addEventButton">Add Event</button>
-  </form>
-
-  <!-- Notification Container -->
-  <div id="notification"></div>
-
-  <!-- Event Details Modal -->
-  <div id="eventModal" class="modal">
-    <!-- Modal content will be dynamically loaded here -->
   </div>
+  <!-- Main content (will be shown after preloader) -->
+  <div class="main-content" id="mainContent" style="display: none;">
+    <h1>Online Interactive Timeline</h1>
 
-  <!-- Edit Event Modal -->
-  <div id="editEventModal" class="modal">
-    <!-- Modal content will be dynamically loaded here -->
+    <!-- Search Bar (will be dynamically enhanced by JavaScript) -->
+    <div id="searchContainer"></div>
+
+    <!-- Filter Controls (will be dynamically added by JavaScript) -->
+    <div id="filterControls"></div>
+
+    <!-- Section to display events dynamically -->
+    <div class="timeline" id="eventsContainer">
+      <!-- Events will be dynamically loaded here -->
+    </div>
+
+    <!-- Form to add new event -->
+    <form id="addEventForm">
+      <div class="input-wrapper">
+        <input type="text" id="eventTitle" placeholder="Event Title" required />
+      </div>
+      <div class="input-wrapper">
+        <input type="date" id="eventDate" required />
+      </div>
+      <button type="submit" id="addEventButton">Add Event</button>
+    </form>
+
+    <!-- Notification Container -->
+    <div id="notification"></div>
+
+    <!-- Event Details Modal -->
+    <div id="eventModal" class="modal">
+      <!-- Modal content will be dynamically loaded here -->
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div id="editEventModal" class="modal">
+      <!-- Modal content will be dynamically loaded here -->
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+      <!-- Modal content will be dynamically loaded here -->
+    </div>
   </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div id="confirmModal" class="modal">
-    <!-- Modal content will be dynamically loaded here -->
-  </div>
-
   <script src="script.js"></script>
 </body>
 

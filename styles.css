@@ -6,14 +6,131 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Ensure the body takes up full height */
+html,
 body {
-  background-color: #f0f4f8;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* Preloader specific styles - isolated from other elements */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Prevent preloader styles from affecting other elements */
+.preloader .class-image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: 70vh;
+}
+
+.preloader .class-image {
+  position: absolute;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(0);
+  animation: expand 2.5s forwards;
+  object-fit: cover;
+  max-width: 95%;
+  max-height: 90vh;
+}
+
+@keyframes expand {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.preloader .loading-text {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.preloader .progress-container {
+  width: 300px;
+  margin-top: 20px;
+}
+
+.preloader .progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.preloader .progress {
+  height: 100%;
+  width: 0;
+  background-color: #4CAF50;
+  transition: width 3s ease-in-out;
+}
+
+.preloader .progress-text {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Make sure the main content container doesn't inherit preloader styles */
+.main-content form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 25px;
+  align-items: flex-end;
+}
+
+/* Override any form display that might be affected */
+#addEventForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  align-items: flex-end;
+}
+
+
+
+
+body {
+  background-image: linear-gradient(rgba(240, 244, 248, 0.7), rgba(224, 232, 240, 0.7)),url('img/sunset1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #333;
   line-height: 1.6;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background-image: linear-gradient(to bottom right, #f0f4f8, #e0e8f0);
+}
+
+@media (max-width: 768px) {
+  body {
+    background-position: top center;
+    /* This ensures the important part of the image is visible on mobile */
+  }
 }
 
 h1 {
@@ -131,27 +248,32 @@ h1::after {
 }
 
 /* Hide arrow on last event in a row */
-.left-to-right .event-wrapper:last-child::after,
+/* .left-to-right .event-wrapper:last-child::after,
 .right-to-left .event-wrapper:first-child::after {
   display: none;
-}
+} */
 
 /* Vertical connectors between rows */
 .event-row:not(:last-child)::after {
   content: '';
   position: absolute;
-  bottom: -40px;
+  bottom: -107px; /* Height of the vertical connector ###*/
   width: 3px;
-  height: 40px;
+  height: 168px;/* Height of the vertical connector ###*/
   background: linear-gradient(to bottom, #3498db, #2ecc71);
   z-index: -1;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.4s ease 0.2s;
+  /* Clip the line initially */
+  clip-path: inset(50% 0);
+    /* Clip from middle, showing nothing */
+  transform-origin: center;
+  transition: clip-path 0.4s ease 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .event-row:not(:last-child):hover::after {
-  transform: scaleY(1);
+  clip-path: inset(0% 0);
+    /* Show full line */;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Position vertical connectors based on row direction */
@@ -310,15 +432,35 @@ form:focus-within {
 
 .enhanced-form {
   display: flex;
+  /* Enable Flexbox */
   flex-wrap: wrap;
+  /* Allow items to wrap to the next line if needed */
+  align-items: center;
+  /* Vertically align items */
   gap: 25px;
+  /* Space between items */
   align-items: flex-end;
+  /* Align items to the end (bottom) */
+}
+
+/* Add this rule for horizontal alignment */
+.form-row {
+  display: flex;
+  /* Enable Flexbox for this row */
+  gap: 10px;
+  /* Add space between the items */
+  align-items: center;
+  /* Vertically align the items */
+  width: 100%;
+  /* Make sure the row takes the full width */
 }
 
 .input-wrapper {
   position: relative;
   flex: 1;
+  /* Make items grow equally */
   min-width: 200px;
+  /* Minimum width for the input field */
   margin-bottom: 10px;
 }
 
@@ -344,6 +486,7 @@ form:focus-within {
   font-size: 0.85rem;
   color: #3498db;
   background-color: #fff;
+  padding: 0 5px;
 }
 
 input[type="text"],
@@ -364,7 +507,8 @@ input[type="date"]:focus {
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-input[type="text"]::placeholder {
+input[type="text"]::placeholder,
+input[type="date"]::placeholder {
   color: transparent;
 }
 
@@ -400,7 +544,7 @@ button[type="submit"]::before {
 button[type="submit"]:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
-  
+
 }
 
 button[type="submit"]:hover::before {
@@ -422,6 +566,7 @@ button[type="submit"]:disabled {
   transform: none;
   box-shadow: none;
 }
+
 
 /* Modal Styles */
 .modal {
@@ -935,6 +1080,12 @@ button[type="submit"]:disabled {
   animation-delay: 0.5s;
 }
 
+/* Style for active connectors */
+.event-row.connector-active::after {
+  clip-path: inset(0% 0) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .event-row {
@@ -947,6 +1098,7 @@ button[type="submit"]:disabled {
   }
 
   .enhanced-form {
+    
     flex-direction: column;
   }
 
