@@ -725,7 +725,11 @@ const initializeFilterControls = () => {
 
   // Add filter controls to DOM
   const timelineEl = document.querySelector('.timeline');
-  document.body.insertBefore(filterControls, timelineEl);
+  if (timelineEl) {
+    timelineEl.insertAdjacentElement('beforebegin', filterControls); // Insert before the timeline
+  } else {
+    console.error('Timeline element not found!');
+  }
 
   // Set up event listeners
   viewSelect.addEventListener('change', () => {
@@ -803,7 +807,11 @@ const setupSearch = () => {
 
   // Add search container to DOM before the timeline
   const timelineEl = document.querySelector('.timeline');
-  document.body.insertBefore(searchContainer, timelineEl);
+  if (timelineEl) {
+    timelineEl.insertAdjacentElement('beforebegin', searchContainer); // Insert before the timeline
+  } else {
+    console.error('Timeline element not found!');
+  }
 
   // Add search functionality
   const searchInput = document.getElementById('searchEvents');
@@ -857,7 +865,7 @@ const enhanceForm = () => {
   document.getElementById('eventDate').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      addEvent(e);
+      document.getElementById('addEventButton').click();
     }
   });
 
