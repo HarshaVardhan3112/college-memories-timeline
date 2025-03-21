@@ -84,21 +84,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 1300);
   }
 
-  // Wait for the classImage to load before starting animation
-  function waitForImageToLoad() {
-    if (classImage.complete && classImage.naturalHeight !== 0) {
-      // If image is already cached and loaded
-      startProgressBar();
-    } else {
-      // Wait for the image to fully load
-      classImage.onload = function () {
-        startProgressBar();
-      };
-    }
+  // Function to preload image before starting animations
+  function preloadImage(callback) {
+    const img = new Image();
+    img.src = classImage.src || window.getComputedStyle(classImage).backgroundImage.slice(5, -2); // Support for <img> or background-image
+
+    img.onload = function () {
+      classImage.style.backgroundImage = `url(${img.src})`; // Ensure image is displayed
+      classImage.style.opacity = '1'; // Make sure it's visible
+      callback(); // Start animation after image is loaded
+    };
   }
 
-  // Start only after image is loaded
-  waitForImageToLoad();
+  // Start only after image is fully loaded
+  preloadImage(startProgressBar);
 
 });
 
