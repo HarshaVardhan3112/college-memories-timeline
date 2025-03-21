@@ -1,30 +1,81 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const progressBar = document.getElementById('progressBar');
-  const preloader = document.getElementById('preloader');
-  const mainContent = document.getElementById('mainContent');
+  // Update selectors to match your class-based structure
+  const progressBar = document.querySelector('.preloader .progress');
+  const preloader = document.querySelector('.preloader');
+  const mainContent = document.querySelector('.main-content');
+  const classImage = document.querySelector('.preloader .class-image');
 
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += 1;
+  // Get the animation duration from your CSS
+  // Your expand animation is 2.5s as defined in your CSS
+  const animationDuration = 3000; // 3 seconds in milliseconds
+
+  // Function to update progress (visually only)
+  function updateProgress(currentProgress) {
+    let progress = Math.min(currentProgress, 100);
+
+    // Update progress bar width only
     progressBar.style.width = progress + '%';
 
+    // Add pulse effect when near completion
+    if (progress > 90) {
+      progressBar.classList.add('pulse-animation');
+    }
+
+    return progress;
+  }
+
+  // Calculate how often to update to match animation duration
+  const totalSteps = 100; // For 0% to 100%
+  const intervalTime = animationDuration / totalSteps;
+
+  let currentProgress = 0;
+
+  const interval = setInterval(() => {
+    currentProgress += 1;
+    const progress = updateProgress(currentProgress);
+
+    // When progress reaches 100%, complete the loading
     if (progress >= 100) {
       clearInterval(interval);
-
-      setTimeout(() => {
-        preloader.style.opacity = '0';
-        mainContent.style.display = 'block';
-
-        // Remove preloader from DOM after fade out
-        setTimeout(() => {
-          preloader.style.display = 'none';
-
-          // Initialize placeholder effects after preloader
-          enhanceForm(); // Ensure this function initializes your floating placeholders
-        }, 500);
-      }, 500);
+      completeLoading();
     }
-  }, 30);
+  }, intervalTime);
+
+  // Complete loading function
+  function completeLoading() {
+    // Automatically transition to main content after a short delay
+    setTimeout(() => {
+      fadeOutPreloader();
+    }, 1300); // 500ms delay as requested
+  }
+
+  // Fade out preloader
+  function fadeOutPreloader() {
+    preloader.style.opacity = '0';
+    mainContent.style.display = 'block';
+
+    // Remove preloader from DOM after fade out
+    setTimeout(() => {
+      preloader.style.display = 'none';
+
+      // Initialize placeholder effects after preloader
+      if (typeof enhanceForm === 'function') {
+        enhanceForm(); // Ensure this function initializes your floating placeholders
+      }
+    }, 500);
+  }
+
+  // Alternative approach - sync with animation events
+  // This is a backup in case the timing approach doesn't work perfectly
+  classImage.addEventListener('animationend', function () {
+    // When image animation ends, ensure progress bar is at 100%
+    progressBar.style.width = '100%';
+
+    // Add small delay to ensure progress bar is visible at 100%
+    setTimeout(() => {
+      completeLoading();
+    }, 200);
+  });
 });
 
 
