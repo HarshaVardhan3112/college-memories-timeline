@@ -76,6 +76,30 @@ document.addEventListener('DOMContentLoaded', function () {
       completeLoading();
     }, 200);
   });
+
+  // Function to complete loading
+  function completeLoading() {
+    setTimeout(() => {
+      fadeOutPreloader();
+    }, 1300);
+  }
+
+  // Wait for the classImage to load before starting animation
+  function waitForImageToLoad() {
+    if (classImage.complete && classImage.naturalHeight !== 0) {
+      // If image is already cached and loaded
+      startProgressBar();
+    } else {
+      // Wait for the image to fully load
+      classImage.onload = function () {
+        startProgressBar();
+      };
+    }
+  }
+
+  // Start only after image is loaded
+  waitForImageToLoad();
+
 });
 
 
