@@ -409,16 +409,16 @@ const showEditEventForm = (event) => {
       <h2>Edit Event</h2>
       <form id="editEventForm">
         <div class="form-group">
-          <label for="editEventName">Event Name:</label>
-          <input type="text" id="editEventName" value="${event.eventName}" required>
+          <input type="text" id="editEventName" placeholder="Event Name" value="${event.eventName}" required>
+          <label for="editEventName">Event Name</label>
         </div>
         <div class="form-group">
-          <label for="editEventDate">Date:</label>
-          <input type="date" id="editEventDate" value="${formattedDate}" required>
+          <input type="date" id="editEventDate" placeholder="Date" value="${formattedDate}" required>
+          <label for="editEventDate">Date</label>
         </div>
         <button type="submit" class="save-btn">Save Changes</button>
       </form>
-    </div>
+  </div>
   `;
 
   // Show the modal with animation
