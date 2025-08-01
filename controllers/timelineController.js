@@ -13,9 +13,14 @@ exports.getEvents = async (req, res) => {
 
 // Add a new event
 exports.addEvent = async (req, res) => {
-  const { eventName, date } = req.body;
+  const { eventName, date, picHolder, picsReceived } = req.body;
   try {
-    const newEvent = new Event({ eventName, date });
+    const newEvent = new Event({
+      eventName,
+      date,
+      picHolder: picHolder || '',
+      picsReceived: picsReceived || false
+    });
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {
@@ -42,10 +47,22 @@ exports.deleteEvent = async (req, res) => {
 // Update an event
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
-  const { eventName, date } = req.body;
+  const { eventName, date, picHolder, picsReceived } = req.body;
+  if (!eventName || !date) {
+    return res.status(400).json({ error: 'Event name and date are required' });
+  }
 
   try {
-    const updatedEvent = await Event.findByIdAndUpdate(id, { eventName, date }, { new: true });
+    const updatedEvent = await Event.findByIdAndUpdate(
+      id,
+      {
+        eventName,
+        date,
+        picHolder: picHolder || '',
+        picsReceived: picsReceived || false
+      },
+      { new: true }
+    );
 
     if (!updatedEvent) {
       return res.status(404).json({ error: 'Event not found' });

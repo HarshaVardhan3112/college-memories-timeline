@@ -14,6 +14,15 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  picHolder: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  picsReceived: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model('Event', eventSchema);

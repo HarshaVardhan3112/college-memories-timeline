@@ -41,6 +41,8 @@ app.post('/api/timeline', async (req, res) => {
     const newEvent = new Event({
       eventName: req.body.eventName,
       date: req.body.date,
+      picHolder: req.body.picHolder || '',
+      picsReceived: req.body.picsReceived || false,
     });
     await newEvent.save();
     res.status(201).json(newEvent);
@@ -57,6 +59,8 @@ app.put('/api/timeline/:id', async (req, res) => {
     const updatedEvent = {
       eventName: req.body.eventName,
       date: req.body.date,
+      picHolder: req.body.picHolder || '',
+      picsReceived: req.body.picsReceived || false,
     };
 
     // Find the event by ID and update it

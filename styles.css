@@ -37,7 +37,8 @@ body {
   align-items: center;
   overflow: hidden;
   width: 100%;
-  height: 90vh;/* Reduced from 90vh to make room for the quote */
+  height: 90vh;
+  /* Reduced from 90vh to make room for the quote */
   margin: 15px 0 0 0;
 }
 
@@ -138,14 +139,15 @@ body {
 
 /* Pulse animation for near completion */
 @keyframes pulse {
+
   0%,
-    100% {
-      opacity: 0.3;
-    }
-  
-    50% {
-      opacity: 1;
-    }
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .preloader .pulse-animation {
@@ -172,7 +174,7 @@ body {
 
 
 body {
-  background-image: linear-gradient(rgba(240, 244, 248, 0.7), rgba(224, 232, 240, 0.7)),url('img/sunset1.jpg');
+  background-image: linear-gradient(rgba(240, 244, 248, 0.7), rgba(224, 232, 240, 0.7)), url('img/sunset1.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -314,14 +316,16 @@ h1::after {
 .event-row:not(:last-child)::after {
   content: '';
   position: absolute;
-  bottom: -107px; /* Height of the vertical connector ###*/
+  bottom: -107px;
+  /* Height of the vertical connector ###*/
   width: 3px;
-  height: 168px;/* Height of the vertical connector ###*/
+  height: 168px;
+  /* Height of the vertical connector ###*/
   background: linear-gradient(to bottom, #3498db, #2ecc71);
   z-index: -1;
   /* Clip the line initially */
   clip-path: inset(50% 0);
-    /* Clip from middle, showing nothing */
+  /* Clip from middle, showing nothing */
   transform-origin: center;
   transition: clip-path 0.4s ease 0.2s;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -329,7 +333,8 @@ h1::after {
 
 .event-row:not(:last-child):hover::after {
   clip-path: inset(0% 0);
-    /* Show full line */;
+  /* Show full line */
+  ;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -442,6 +447,71 @@ h1::after {
 .event:hover .event-date {
   background-color: rgba(46, 204, 113, 0.1);
   color: #2ecc71;
+}
+
+/* Picture Holder Styles */
+.pic-holder {
+  font-size: 0.85rem;
+  color: #34495e;
+  margin: 8px 0 5px 0;
+  padding: 6px 10px;
+  background-color: rgba(52, 73, 94, 0.1);
+  border-radius: 15px;
+  border-left: 3px solid #34495e;
+  transition: all 0.3s ease;
+}
+
+.event:hover .pic-holder {
+  background-color: rgba(52, 73, 94, 0.15);
+  border-left-color: #2c3e50;
+  color: #2c3e50;
+}
+
+/* Pictures Received Status Styles */
+.pics-received {
+  font-size: 0.85rem;
+  margin: 8px 0 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pics-received strong {
+  color: #34495e;
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.status.received {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.status.pending {
+  background-color: rgba(241, 196, 15, 0.15);
+  color: #f39c12;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.event:hover .status.received {
+  background-color: rgba(46, 204, 113, 0.25);
+  border-color: rgba(46, 204, 113, 0.5);
+}
+
+.event:hover .status.pending {
+  background-color: rgba(241, 196, 15, 0.25);
+  border-color: rgba(241, 196, 15, 0.5);
 }
 
 /* Delete Button */
@@ -557,6 +627,68 @@ input[type="date"]:focus {
 input[type="text"]::placeholder,
 input[type="date"]::placeholder {
   color: transparent;
+}
+
+/* Checkbox Wrapper Styles */
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 10px 0;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  min-width: 200px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  appearance: none;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.checkbox-wrapper input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.checkbox-wrapper label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  user-select: none;
+  margin: 0;
+  position: static;
+  transform: none;
+  background-color: transparent;
+  padding: 0;
+  z-index: auto;
 }
 
 button[type="submit"] {
@@ -741,6 +873,55 @@ button[type="submit"]:disabled {
   font-size: 0.9rem;
 }
 
+/* Modal Picture Holder Styles */
+.modal-pic-holder {
+  margin: 15px 0;
+  padding: 12px 15px;
+  background-color: rgba(52, 73, 94, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #34495e;
+  font-size: 0.95rem;
+}
+
+.modal-pic-holder strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Modal Pictures Received Status */
+.modal-pics-received {
+  margin: 15px 0;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-pics-received strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.modal-pics-received .status.received {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #27ae60;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  border: 2px solid rgba(46, 204, 113, 0.3);
+}
+
+.modal-pics-received .status.pending {
+  background-color: rgba(241, 196, 15, 0.2);
+  color: #f39c12;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  border: 2px solid rgba(241, 196, 15, 0.3);
+}
+
 .event-actions {
   display: flex;
   gap: 15px;
@@ -853,6 +1034,73 @@ button[type="submit"]:disabled {
 .form-group textarea::placeholder,
 .form-group select::placeholder {
   color: transparent;
+}
+
+/* Checkbox Group in Modal */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.checkbox-group:hover {
+  border-color: #3498db;
+  background-color: #f8f9fa;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  appearance: none;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.checkbox-group input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.checkbox-group label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2c3e50;
+  user-select: none;
+  margin: 0;
+  position: static;
+  transform: none;
+  background-color: transparent;
+  padding: 0;
+  z-index: auto;
 }
 
 /* Media queries for responsiveness */
@@ -1270,8 +1518,31 @@ button[type="submit"]:disabled {
   }
 
   .enhanced-form {
-    
+
     flex-direction: column;
+  }
+
+  .checkbox-wrapper {
+    min-width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .pic-holder,
+  .pics-received {
+    font-size: 0.8rem;
+    margin: 6px 0 4px 0;
+  }
+
+  .status {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+
+  .modal-pic-holder,
+  .modal-pics-received {
+    margin: 10px 0;
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 
   .filter-controls {

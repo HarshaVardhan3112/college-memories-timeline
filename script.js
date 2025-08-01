@@ -1,5 +1,10 @@
+/**
+ * PRELOADER INITIALIZATION
+ * Handles the loading screen animation and progress bar functionality
+ * This section manages the transition from loading screen to main content
+ */
 document.addEventListener('DOMContentLoaded', function () {
-  // Update selectors to match your class-based structure
+  // DOM element selectors for preloader components
   const progressBar = document.querySelector('.preloader .progress');
   const preloader = document.querySelector('.preloader');
   const mainContent = document.querySelector('.main-content');
@@ -9,14 +14,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Your expand animation is 2.5s as defined in your CSS
   const animationDuration = 3000; // 3 seconds in milliseconds
 
-  // Function to update progress (visually only)
+  /**
+   * Updates the progress bar visual appearance
+   * @param {number} currentProgress - Current progress value (0-100)
+   * @returns {number} - Clamped progress value
+   */
   function updateProgress(currentProgress) {
-    let progress = Math.min(currentProgress, 100);
+    let progress = Math.min(currentProgress, 100); // Ensure progress doesn't exceed 100%
 
     // Update progress bar width only
     progressBar.style.width = progress + '%';
 
-    // Add pulse effect when near completion
+    // Add pulse effect when near completion to indicate final loading phase
     if (progress > 90) {
       progressBar.classList.add('pulse-animation');
     }
@@ -30,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let currentProgress = 0;
 
+  // Start the progress bar animation with incremental updates
   const interval = setInterval(() => {
     currentProgress += 1;
     const progress = updateProgress(currentProgress);
@@ -41,15 +51,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }, intervalTime);
 
-  // Complete loading function
+  /**
+   * Completes the loading process and initiates transition to main content
+   */
   function completeLoading() {
     // Automatically transition to main content after a short delay
     setTimeout(() => {
       fadeOutPreloader();
-    }, 1300); // 500ms delay as requested
+    }, 1300); // 1300ms delay to allow user to see completion
   }
 
-  // Fade out preloader
+  /**
+   * Fades out the preloader and shows the main content
+   */
   function fadeOutPreloader() {
     preloader.style.opacity = '0';
     mainContent.style.display = 'block';
@@ -77,17 +91,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 200);
   });
 
-  // Function to complete loading
+  // Function to complete loading (duplicate declaration removed in implementation)
   function completeLoading() {
     setTimeout(() => {
       fadeOutPreloader();
     }, 1300);
   }
 
-  // Function to preload image before starting animations
+  /**
+   * Preloads the class image before starting animations
+   * @param {Function} callback - Function to call after image is loaded
+   */
   function preloadImage(callback) {
     const img = new Image();
-    img.src = classImage.src || window.getComputedStyle(classImage).backgroundImage.slice(5, -2); // Support for <img> or background-image
+    // Support for both <img> src and background-image CSS property
+    img.src = classImage.src || window.getComputedStyle(classImage).backgroundImage.slice(5, -2);
 
     img.onload = function () {
       classImage.style.backgroundImage = `url(${img.src})`; // Ensure image is displayed
@@ -101,22 +119,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-
+/**
+ * GLOBAL APPLICATION STATE
+ * These variables store the current state of the timeline application
+ */
 
 // Global variables
-let allEvents = [];
-let filteredEvents = [];
-let currentView = 'all'; // 'all', 'year', 'month'
-let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth();
+let allEvents = []; // Array to store all events fetched from the server
+let filteredEvents = []; // Array to store currently filtered/displayed events
+let currentView = 'all'; // Current filter view: 'all', 'year', 'month'
+let currentYear = new Date().getFullYear(); // Currently selected year for filtering
+let currentMonth = new Date().getMonth(); // Currently selected month for filtering
 
-// Function to fetch and display events
+/**
+ * EVENT DATA MANAGEMENT
+ * Functions to fetch, filter, and display timeline events
+ */
+
+/**
+ * Fetches all events from the server and initializes the display
+ */
 const fetchEvents = async () => {
   try {
     const response = await fetch('https://college-memories-timeline.onrender.com/api/timeline');
     allEvents = await response.json();
 
-    // Initial filter setup
+    // Initial filter setup - apply current filter settings
     filterEvents();
 
   } catch (error) {
@@ -125,36 +153,45 @@ const fetchEvents = async () => {
   }
 };
 
-// Function to filter events based on current view
+/**
+ * Filters events based on the current view settings (all, year, or month)
+ * Updates the filteredEvents array and triggers display update
+ */
 const filterEvents = () => {
   switch (currentView) {
     case 'year':
+      // Filter events to show only those from the current selected year
       filteredEvents = allEvents.filter(event => {
         const eventDate = new Date(event.date);
         return eventDate.getFullYear() === currentYear;
       });
       break;
     case 'month':
+      // Filter events to show only those from the current selected month and year
       filteredEvents = allEvents.filter(event => {
         const eventDate = new Date(event.date);
         return eventDate.getFullYear() === currentYear && eventDate.getMonth() === currentMonth;
       });
       break;
     default: // 'all'
+      // Show all events (create a copy of the array)
       filteredEvents = [...allEvents];
   }
 
-  // Sort filtered events by date
+  // Sort filtered events by date (chronological order)
   filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   // Display filtered events
   displayEvents();
 
-  // Update filter controls
+  // Update filter controls UI
   updateFilterDisplay();
 };
 
-// Function to display events
+/**
+ * Displays filtered events in the timeline interface
+ * Creates rows of events with alternating directions and animations
+ */
 const displayEvents = () => {
   const eventsContainer = document.getElementById('eventsContainer');
   eventsContainer.innerHTML = ''; // Clear any existing events
@@ -180,7 +217,7 @@ const displayEvents = () => {
     const rowElement = document.createElement('div');
     rowElement.classList.add('event-row');
 
-    // Add alternating direction classes
+    // Add alternating direction classes for visual flow
     if (rowIndex % 2 === 0) {
       rowElement.classList.add('left-to-right');
     } else {
@@ -196,7 +233,7 @@ const displayEvents = () => {
       eventElement.classList.add('event');
       eventElement.setAttribute('data-id', event._id);
 
-      // Format the date nicely
+      // Format the date nicely for display
       const eventDate = new Date(event.date);
       const formattedDate = eventDate.toLocaleDateString('en-US', {
         month: 'short',
@@ -204,42 +241,48 @@ const displayEvents = () => {
         year: 'numeric'
       });
 
-      // Create event content
+      // Create event content HTML
       eventElement.innerHTML = `
         <div class="event-content">
           <h3>${event.eventName}</h3>
           <p class="event-date">${formattedDate}</p>
+          ${event.picHolder ? `<p class="pic-holder"><strong>Pic Holder:</strong> ${event.picHolder}</p>` : ''}
+          <p class="pics-received">
+            <strong>Pictures:</strong> 
+            <span class="status ${event.picsReceived ? 'received' : 'pending'}">
+              ${event.picsReceived ? '✓ Received' : '⏳ Pending'}
+            </span>
+          </p>
         </div>
       `;
 
-      // Add event interaction
+      // Add click handler to show event details
       eventElement.addEventListener('click', () => {
         showEventDetails(event);
       });
 
-      // Add the delete button with the correct event ID
+      // Add the delete button with proper event handling
       const deleteButton = document.createElement('button');
       deleteButton.classList.add('delete-btn');
       deleteButton.innerHTML = '❌';
       deleteButton.onclick = (e) => {
-        e.stopPropagation(); // Prevent event bubbling
+        e.stopPropagation(); // Prevent event bubbling to parent click handler
         confirmDelete(event._id, event.eventName);
       };
 
       eventElement.appendChild(deleteButton);
       eventWrapper.appendChild(eventElement);
-
       rowElement.appendChild(eventWrapper);
     });
 
-    // Add animations for row appearance
+    // Add initial animation state (hidden)
     rowElement.style.opacity = '0';
     rowElement.style.transform = 'translateY(20px)';
 
     // Append the row to the container
     eventsContainer.appendChild(rowElement);
 
-    // Add C-shaped connectors between rows
+    // Add C-shaped connectors between rows for visual continuity
     if (rowIndex > 0) {
       // Even rows have connectors at the start
       if (rowIndex % 2 === 0) {
@@ -251,17 +294,18 @@ const displayEvents = () => {
       }
     }
 
-    // Animate the row appearance with a slight delay based on row index
+    // Animate the row appearance with staggered timing
     setTimeout(() => {
       rowElement.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       rowElement.style.opacity = '1';
       rowElement.style.transform = 'translateY(0)';
-    }, 100 * rowIndex);
+    }, 100 * rowIndex); // Delay increases with each row
   });
-  // Add hover effect for event rows
+
+  // Add hover effect for event rows to highlight connectors
   document.querySelectorAll('.event-row').forEach(row => {
     row.addEventListener('mouseenter', () => {
-      // Get the previous row
+      // Get the previous row to highlight connector
       const prevRow = row.previousElementSibling;
       if (prevRow && prevRow.classList.contains('event-row')) {
         // Add an active class to the previous row
@@ -276,10 +320,16 @@ const displayEvents = () => {
       });
     });
   });
-
 };
 
-// Function to update filter display
+/**
+ * USER INTERFACE FUNCTIONS
+ * Functions to manage UI elements, modals, and user interactions
+ */
+
+/**
+ * Updates the filter display text to show current filtering state
+ */
 const updateFilterDisplay = () => {
   const filterStatus = document.getElementById('filterStatus');
   if (!filterStatus) return;
@@ -297,9 +347,12 @@ const updateFilterDisplay = () => {
   }
 };
 
-// Function to show event details modal
+/**
+ * Shows detailed information about an event in a modal popup
+ * @param {Object} event - The event object containing event details
+ */
 const showEventDetails = (event) => {
-  // Check if modal already exists
+  // Check if modal already exists to avoid creating duplicates
   let modal = document.getElementById('eventModal');
 
   if (!modal) {
@@ -310,7 +363,7 @@ const showEventDetails = (event) => {
     document.body.appendChild(modal);
   }
 
-  // Format the date nicely
+  // Format the date nicely for better readability
   const eventDate = new Date(event.date);
   const formattedDate = eventDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -319,18 +372,25 @@ const showEventDetails = (event) => {
     year: 'numeric'
   });
 
-  // Calculate days since event
+  // Calculate days since event for additional context
   const today = new Date();
   const diffTime = Math.abs(today - eventDate);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  // Populate modal content
+  // Populate modal content with event information and action buttons
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close-modal">&times;</span>
       <h2>${event.eventName}</h2>
       <p class="event-date-full">${formattedDate}</p>
       <p class="event-time-ago">${diffDays} days ago</p>
+      ${event.picHolder ? `<p class="modal-pic-holder"><strong>Picture Holder:</strong> ${event.picHolder}</p>` : ''}
+      <p class="modal-pics-received">
+        <strong>Pictures Status:</strong> 
+        <span class="status ${event.picsReceived ? 'received' : 'pending'}">
+          ${event.picsReceived ? '✓ Pictures Received' : '⏳ Pictures Pending'}
+        </span>
+      </p>
       <div class="event-actions">
         <button class="edit-event-btn">Edit</button>
         <button class="delete-event-btn">Delete</button>
@@ -338,14 +398,14 @@ const showEventDetails = (event) => {
     </div>
   `;
 
-  // Show the modal with animation
+  // Show the modal with smooth animation
   modal.style.display = 'block';
   setTimeout(() => {
     modal.querySelector('.modal-content').style.transform = 'translateY(0)';
     modal.querySelector('.modal-content').style.opacity = '1';
   }, 10);
 
-  // Set up event listeners
+  // Set up event listeners for modal interactions
   modal.querySelector('.close-modal').addEventListener('click', closeModal);
   modal.querySelector('.edit-event-btn').addEventListener('click', () => {
     closeModal();
@@ -356,7 +416,7 @@ const showEventDetails = (event) => {
     confirmDelete(event._id, event.eventName);
   });
 
-  // Close modal when clicking outside
+  // Close modal when clicking outside the modal content
   window.onclick = (e) => {
     if (e.target === modal) {
       closeModal();
@@ -416,6 +476,14 @@ const showEditEventForm = (event) => {
           <input type="date" id="editEventDate" placeholder="Date" value="${formattedDate}" required>
           <label for="editEventDate">Date</label>
         </div>
+        <div class="form-group">
+          <input type="text" id="editPicHolder" placeholder="Picture Holder" value="${event.picHolder || ''}" >
+          <label for="editPicHolder">Picture Holder</label>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="editPicsReceived" ${event.picsReceived ? 'checked' : ''}>
+          <label for="editPicsReceived">Pictures Received</label>
+        </div>
         <button type="submit" class="save-btn">Save Changes</button>
       </form>
   </div>
@@ -446,8 +514,10 @@ const showEditEventForm = (event) => {
 
     const updatedName = document.getElementById('editEventName').value;
     const updatedDate = document.getElementById('editEventDate').value;
+    const updatedPicHolder = document.getElementById('editPicHolder').value;
+    const updatedPicsReceived = document.getElementById('editPicsReceived').checked;
 
-    console.log('Submitting form with:', { updatedName, updatedDate });
+    console.log('Submitting form with:', { updatedName, updatedDate, updatedPicHolder, updatedPicsReceived });
 
     const isValidObjectId = (id) => {
       return /^[0-9a-fA-F]{24}$/.test(id);
@@ -471,7 +541,9 @@ const showEditEventForm = (event) => {
         },
         body: JSON.stringify({
           eventName: updatedName,
-          date: updatedDate
+          date: updatedDate,
+          picHolder: updatedPicHolder,
+          picsReceived: updatedPicsReceived
         }),
       });
 
@@ -493,6 +565,11 @@ const showEditEventForm = (event) => {
   });
 };
 
+/**
+ * EVENT MANAGEMENT FUNCTIONS
+ * Functions to handle creating, editing, and deleting events
+ */
+
 // Function to close edit modal
 const closeEditModal = () => {
   const editModal = document.getElementById('editEventModal');
@@ -506,7 +583,11 @@ const closeEditModal = () => {
   }
 };
 
-// Function to confirm delete
+/**
+ * Shows a confirmation dialog before deleting an event
+ * @param {string} eventId - The unique ID of the event to delete
+ * @param {string} eventName - The name of the event for confirmation message
+ */
 const confirmDelete = (eventId, eventName) => {
   // Create confirmation modal
   let confirmModal = document.getElementById('confirmModal');
@@ -518,7 +599,7 @@ const confirmDelete = (eventId, eventName) => {
     document.body.appendChild(confirmModal);
   }
 
-  // Populate modal content
+  // Populate modal content with confirmation message
   confirmModal.innerHTML = `
     <div class="modal-content">
       <h2>Confirm Delete</h2>
@@ -537,7 +618,7 @@ const confirmDelete = (eventId, eventName) => {
     confirmModal.querySelector('.modal-content').style.opacity = '1';
   }, 10);
 
-  // Set up event listeners
+  // Set up event listeners for user response
   confirmModal.querySelector('.cancel-btn').addEventListener('click', closeConfirmModal);
   confirmModal.querySelector('.delete-confirm-btn').addEventListener('click', async () => {
     await deleteEvent(eventId);
@@ -565,7 +646,10 @@ const closeConfirmModal = () => {
   }
 };
 
-// Function to delete an event
+/**
+ * Deletes an event from the server and updates the UI
+ * @param {string} eventId - The unique ID of the event to delete
+ */
 const deleteEvent = async (eventId) => {
   try {
     const response = await fetch(`https://college-memories-timeline.onrender.com/api/timeline/${eventId}`, {
@@ -574,7 +658,7 @@ const deleteEvent = async (eventId) => {
     const deletedEvent = await response.json();
     console.log('Event deleted:', deletedEvent);
 
-    // Animation for deleting event
+    // Animation for deleting event - fade out and scale down
     const eventElement = document.querySelector(`.event[data-id="${eventId}"]`);
     if (eventElement) {
       eventElement.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -582,6 +666,7 @@ const deleteEvent = async (eventId) => {
       eventElement.style.transform = 'scale(0.8)';
     }
 
+    // Refresh the timeline after animation completes
     setTimeout(() => {
       fetchEvents(); // Re-fetch and display events after deletion
       showNotification('Event deleted successfully!', 'success');
@@ -592,23 +677,30 @@ const deleteEvent = async (eventId) => {
   }
 };
 
-// Function to add a new event
+/**
+ * Creates a new event and adds it to the timeline
+ * @param {Event} e - The form submission event
+ */
 const addEvent = async (e) => {
   e.preventDefault();
 
   const eventName = document.getElementById('eventTitle').value;
   const eventDate = document.getElementById('eventDate').value;
+  const picHolder = document.getElementById('picHolder').value;
+  const picsReceived = document.getElementById('picsReceived').checked;
 
+  // Validate form inputs
   if (!eventName || !eventDate) {
     showNotification('Please enter both event title and date', 'error');
     return;
   }
 
   try {
-    // Show loading state
+    // Show loading state on button
     document.getElementById('addEventButton').disabled = true;
     document.getElementById('addEventButton').textContent = 'Adding...';
 
+    // Send POST request to create new event
     const response = await fetch('https://college-memories-timeline.onrender.com/api/timeline', {
       method: 'POST',
       headers: {
@@ -617,15 +709,19 @@ const addEvent = async (e) => {
       body: JSON.stringify({
         eventName,
         date: eventDate,
+        picHolder,
+        picsReceived
       }),
     });
 
     const newEvent = await response.json();
     console.log('Event added:', newEvent);
 
-    // Reset form
+    // Reset form fields
     document.getElementById('eventTitle').value = '';
     document.getElementById('eventDate').value = '';
+    document.getElementById('picHolder').value = '';
+    document.getElementById('picsReceived').checked = false;
 
     // Show success message
     showNotification('Event added successfully!', 'success');
@@ -640,13 +736,22 @@ const addEvent = async (e) => {
     console.error('Error adding event:', error);
     showNotification('Error adding event. Please try again.', 'error');
 
-    // Reset button state
+    // Reset button state on error
     document.getElementById('addEventButton').disabled = false;
     document.getElementById('addEventButton').textContent = 'Add Event';
   }
 };
 
-// Function to show notification
+/**
+ * UTILITY FUNCTIONS
+ * Helper functions for notifications, filters, search, and form enhancements
+ */
+
+/**
+ * Shows a notification message to the user
+ * @param {string} message - The message to display
+ * @param {string} type - The type of notification ('success', 'error', etc.)
+ */
 const showNotification = (message, type) => {
   // Create notification element if it doesn't exist
   let notification = document.getElementById('notification');
@@ -678,13 +783,16 @@ const showNotification = (message, type) => {
   }, 3000);
 };
 
-// Function to initialize filter controls
+/**
+ * Initializes filter controls for the timeline view (all, year, month filters)
+ * Creates UI elements and sets up event listeners for filtering functionality
+ */
 const initializeFilterControls = () => {
   // Create filter controls container
   const filterControls = document.createElement('div');
   filterControls.className = 'filter-controls';
 
-  // Create view select
+  // Create view select dropdown
   const viewSelect = document.createElement('select');
   viewSelect.id = 'viewSelect';
   viewSelect.innerHTML = `
@@ -693,7 +801,7 @@ const initializeFilterControls = () => {
     <option value="month">This Month</option>
   `;
 
-  // Create year navigation
+  // Create year navigation controls
   const yearNav = document.createElement('div');
   yearNav.className = 'year-nav';
   yearNav.innerHTML = `
@@ -702,7 +810,7 @@ const initializeFilterControls = () => {
     <button id="nextYear">▶</button>
   `;
 
-  // Create month navigation
+  // Create month navigation controls
   const monthNav = document.createElement('div');
   monthNav.className = 'month-nav';
   monthNav.innerHTML = `
@@ -723,20 +831,20 @@ const initializeFilterControls = () => {
   filterControls.appendChild(monthNav);
   filterControls.appendChild(filterStatus);
 
-  // Add filter controls to DOM
+  // Insert filter controls before timeline in DOM
   const timelineEl = document.querySelector('.timeline');
   if (timelineEl) {
-    timelineEl.insertAdjacentElement('beforebegin', filterControls); // Insert before the timeline
+    timelineEl.insertAdjacentElement('beforebegin', filterControls);
   } else {
     console.error('Timeline element not found!');
   }
 
-  // Set up event listeners
+  // Set up event listeners for view selection
   viewSelect.addEventListener('change', () => {
     currentView = viewSelect.value;
     filterEvents();
 
-    // Toggle visibility of year/month navigation
+    // Toggle visibility of year/month navigation based on selected view
     if (currentView === 'year' || currentView === 'month') {
       yearNav.style.display = 'flex';
     } else {
@@ -763,10 +871,10 @@ const initializeFilterControls = () => {
     filterEvents();
   });
 
-  // Month navigation listeners
+  // Month navigation listeners - handle year rollover
   document.getElementById('prevMonth').addEventListener('click', () => {
     if (currentMonth === 0) {
-      currentMonth = 11;
+      currentMonth = 11; // December
       currentYear--;
       document.getElementById('currentYearDisplay').textContent = currentYear;
     } else {
@@ -778,7 +886,7 @@ const initializeFilterControls = () => {
 
   document.getElementById('nextMonth').addEventListener('click', () => {
     if (currentMonth === 11) {
-      currentMonth = 0;
+      currentMonth = 0; // January
       currentYear++;
       document.getElementById('currentYearDisplay').textContent = currentYear;
     } else {
@@ -788,32 +896,34 @@ const initializeFilterControls = () => {
     filterEvents();
   });
 
-  // Initially hide year/month navigation
+  // Initially hide year/month navigation until specific view is selected
   yearNav.style.display = 'none';
   monthNav.style.display = 'none';
 };
 
-// Function to create and setup search functionality
+/**
+ * Creates and sets up search functionality for filtering events by name or date
+ */
 const setupSearch = () => {
-  // Create search container
+  // Create search container with input and clear button
   const searchContainer = document.createElement('div');
   searchContainer.className = 'search-container';
 
-  // Create search input
+  // Create search input and clear button HTML
   searchContainer.innerHTML = `
     <input type="text" id="searchEvents" placeholder="Search events...">
     <button id="clearSearch">Clear</button>
   `;
 
-  // Add search container to DOM before the timeline
+  // Insert search container before timeline in DOM
   const timelineEl = document.querySelector('.timeline');
   if (timelineEl) {
-    timelineEl.insertAdjacentElement('beforebegin', searchContainer); // Insert before the timeline
+    timelineEl.insertAdjacentElement('beforebegin', searchContainer);
   } else {
     console.error('Timeline element not found!');
   }
 
-  // Add search functionality
+  // Add search functionality with real-time filtering
   const searchInput = document.getElementById('searchEvents');
   searchInput.addEventListener('input', () => {
     const searchTerm = searchInput.value.toLowerCase();
@@ -824,37 +934,41 @@ const setupSearch = () => {
       return;
     }
 
-    // Filter events based on search term
+    // Filter events based on search term (matches event name, date, or pic holder)
     filteredEvents = allEvents.filter(event =>
       event.eventName.toLowerCase().includes(searchTerm) ||
-      new Date(event.date).toLocaleDateString().includes(searchTerm)
+      new Date(event.date).toLocaleDateString().includes(searchTerm) ||
+      (event.picHolder && event.picHolder.toLowerCase().includes(searchTerm))
     );
 
-    // Display filtered results
+    // Display filtered search results
     displayEvents();
 
-    // Update status
+    // Update status to show search results
     const filterStatus = document.getElementById('filterStatus');
     if (filterStatus) {
       filterStatus.textContent = `Search results for "${searchTerm}"`;
     }
   });
 
-  // Add clear button functionality
+  // Add clear button functionality to reset search
   document.getElementById('clearSearch').addEventListener('click', () => {
     searchInput.value = '';
     filterEvents(); // Restore regular filtered view
   });
 };
 
-// Function to enhance the form
+/**
+ * Enhances the add event form with floating labels and improved UX
+ * Adds visual animations and keyboard navigation
+ */
 const enhanceForm = () => {
   const form = document.getElementById('addEventForm');
 
-  // Add visual enhancements
+  // Add visual enhancements class
   form.classList.add('enhanced-form');
 
-  // Add event listeners for Enter key behavior
+  // Add keyboard navigation - Enter key moves between fields
   document.getElementById('eventTitle').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -865,6 +979,20 @@ const enhanceForm = () => {
   document.getElementById('eventDate').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      document.getElementById('picHolder').focus();
+    }
+  });
+
+  document.getElementById('picHolder').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('picsReceived').focus();
+    }
+  });
+
+  document.getElementById('picsReceived').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
       document.getElementById('addEventButton').click();
     }
   });
@@ -872,27 +1000,27 @@ const enhanceForm = () => {
   // Add event listener for the "Add Event" button
   document.getElementById('addEventButton').addEventListener('click', addEvent);
 
-  // Add animated label effect
-  const inputs = form.querySelectorAll('input');
+  // Add animated floating label effect to inputs
+  const inputs = form.querySelectorAll('input[type="text"], input[type="date"]');
   inputs.forEach(input => {
-    // Create a wrapper div
+    // Create a wrapper div for each input
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
 
-    // Create a label
+    // Create a floating label from the placeholder text
     const label = document.createElement('label');
     label.setAttribute('for', input.id);
     label.textContent = input.getAttribute('placeholder');
 
-    // Replace the input in the DOM
+    // Replace the input in the DOM with the new wrapper structure
     input.parentNode.insertBefore(wrapper, input);
     wrapper.appendChild(label);
     wrapper.appendChild(input);
 
-    // Remove placeholder as we now have a label
+    // Remove placeholder as we now have a floating label
     input.removeAttribute('placeholder');
 
-    // Add focus/blur events for animation
+    // Add focus/blur events for floating label animation
     input.addEventListener('focus', () => {
       wrapper.classList.add('active');
     });
@@ -903,20 +1031,45 @@ const enhanceForm = () => {
       }
     });
 
-    // Set initial state if input has value
+    // Set initial state if input already has value
     if (input.value !== '') {
       wrapper.classList.add('active');
     }
   });
+
+  // Handle checkbox separately (no floating label needed)
+  const checkbox = form.querySelector('input[type="checkbox"]');
+  if (checkbox && !checkbox.parentNode.classList.contains('checkbox-wrapper')) {
+    // Only create wrapper if checkbox is not already wrapped
+    const wrapper = document.createElement('div');
+    wrapper.className = 'checkbox-wrapper';
+
+    // Create a label for the checkbox
+    const label = document.createElement('label');
+    label.setAttribute('for', checkbox.id);
+    label.textContent = 'Pictures Received';
+
+    // Replace the checkbox in the DOM with the new wrapper structure
+    checkbox.parentNode.insertBefore(wrapper, checkbox);
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+  }
 };
 
+/**
+ * APPLICATION INITIALIZATION
+ * Main initialization function that sets up all components
+ */
 
-// Initialize the app
+/**
+ * Initializes the complete timeline application
+ * Sets up all components and functionality
+ */
 const initApp = () => {
-  fetchEvents();
-  initializeFilterControls();
-  setupSearch();
-  enhanceForm();
+  fetchEvents();           // Load events from server
+  initializeFilterControls(); // Set up filtering UI
+  setupSearch();          // Set up search functionality
+  enhanceForm();          // Enhance the add event form
 };
 
 // Start the app when the DOM is loaded
