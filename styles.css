@@ -316,10 +316,10 @@ h1::after {
 .event-row:not(:last-child)::after {
   content: '';
   position: absolute;
-  bottom: -107px;
+  bottom: -152px;
   /* Height of the vertical connector ###*/
   width: 3px;
-  height: 168px;
+  height: 263px;
   /* Height of the vertical connector ###*/
   background: linear-gradient(to bottom, #3498db, #2ecc71);
   z-index: -1;
@@ -449,47 +449,76 @@ h1::after {
   color: #2ecc71;
 }
 
-/* Picture Holder Styles */
+/* Picture Holder Styles - UPDATED */
 .pic-holder {
   font-size: 0.85rem;
-  color: #34495e;
-  margin: 8px 0 5px 0;
-  padding: 6px 10px;
-  background-color: rgba(52, 73, 94, 0.1);
-  border-radius: 15px;
-  border-left: 3px solid #34495e;
+  color: #7f8c8d;
+  font-weight: 500;
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: rgba(26, 188, 156, 0.1);
+    /* Light teal */
+  border-radius: 20px;
   transition: all 0.3s ease;
+  margin: 8px 0 5px 0;
+}
+
+.pic-holder::before {
+  content: '';
+  font-size: 1rem;
+  margin-right: 4px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.pic-holder strong {
+  color: #1a3251;
+  font-weight: 600;
 }
 
 .event:hover .pic-holder {
-  background-color: rgba(52, 73, 94, 0.15);
-  border-left-color: #2c3e50;
-  color: #2c3e50;
+  transform: translateY(-2px);
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
 }
 
-/* Pictures Received Status Styles */
+.event:hover .pic-holder::before {
+  opacity: 1;
+}
+
+/* Pictures Received Status Styles - UPDATED */
 .pics-received {
-  font-size: 0.85rem;
-  margin: 8px 0 5px 0;
+  font-size: 0.9rem;
+  margin: 10px 0 8px 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  font-weight: 500;
+  
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .pics-received strong {
-  color: #34495e;
   font-weight: 600;
+  margin-right: 4px;
+}
+
+.event:hover .pics-received {
+  transform: translateY(-2px);
+  background-color: rgba(52, 152, 219, 0.02);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .status.received {
@@ -507,11 +536,15 @@ h1::after {
 .event:hover .status.received {
   background-color: rgba(46, 204, 113, 0.25);
   border-color: rgba(46, 204, 113, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.2);
 }
 
 .event:hover .status.pending {
   background-color: rgba(241, 196, 15, 0.25);
   border-color: rgba(241, 196, 15, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(241, 196, 15, 0.2);
 }
 
 /* Delete Button */
@@ -629,18 +662,30 @@ input[type="date"]::placeholder {
   color: transparent;
 }
 
-/* Checkbox Wrapper Styles */
+/* Checkbox Wrapper Styles - UPDATED */
 .checkbox-wrapper {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
-  padding: 10px 0;
-  background-color: transparent;
+  margin-bottom: 20px;
+  padding: 15px 15px;
+  height: 54px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
   min-width: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.checkbox-wrapper:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  transform: translateY(-2px);
+  background-color: rgba(52, 152, 219, 0.02);
 }
 
 .checkbox-wrapper input[type="checkbox"] {
@@ -659,6 +704,7 @@ input[type="date"]::placeholder {
 .checkbox-wrapper input[type="checkbox"]:checked {
   background-color: #3498db;
   border-color: #3498db;
+  transform: scale(1.1);
 }
 
 .checkbox-wrapper input[type="checkbox"]:checked::after {
@@ -681,7 +727,7 @@ input[type="date"]::placeholder {
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #2c3e50;
+  color: #1a3251;
   user-select: none;
   margin: 0;
   position: static;
@@ -689,6 +735,11 @@ input[type="date"]::placeholder {
   background-color: transparent;
   padding: 0;
   z-index: auto;
+  transition: color 0.3s ease;
+}
+
+.checkbox-wrapper:hover label {
+  color: #3498db;
 }
 
 button[type="submit"] {
@@ -873,34 +924,55 @@ button[type="submit"]:disabled {
   font-size: 0.9rem;
 }
 
-/* Modal Picture Holder Styles */
+/* Modal Picture Holder Styles - UPDATED */
 .modal-pic-holder {
   margin: 15px 0;
-  padding: 12px 15px;
-  background-color: rgba(52, 73, 94, 0.1);
+  padding: 15px 15px;
+  background-color: #fff;
+  border: 2px solid #ddd;
   border-radius: 8px;
-  border-left: 4px solid #34495e;
   font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-pic-holder:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  transform: translateY(-2px);
+  background-color: rgba(52, 152, 219, 0.02);
 }
 
 .modal-pic-holder strong {
-  color: #2c3e50;
+  color: #1a3251;
   font-weight: 600;
+  margin-right: 8px;
 }
 
-/* Modal Pictures Received Status */
+/* Modal Pictures Received Status - UPDATED */
 .modal-pics-received {
   margin: 15px 0;
-  padding: 12px 15px;
+  padding: 15px 15px;
+  border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-pics-received:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  transform: translateY(-2px);
+  background-color: rgba(52, 152, 219, 0.02);
 }
 
 .modal-pics-received strong {
-  color: #2c3e50;
+  color: #1a3251;
   font-weight: 600;
 }
 
@@ -911,6 +983,7 @@ button[type="submit"]:disabled {
   border-radius: 20px;
   font-weight: 600;
   border: 2px solid rgba(46, 204, 113, 0.3);
+  box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
 }
 
 .modal-pics-received .status.pending {
@@ -920,6 +993,7 @@ button[type="submit"]:disabled {
   border-radius: 20px;
   font-weight: 600;
   border: 2px solid rgba(241, 196, 15, 0.3);
+  box-shadow: 0 2px 4px rgba(241, 196, 15, 0.2);
 }
 
 .event-actions {
@@ -1036,28 +1110,31 @@ button[type="submit"]:disabled {
   color: transparent;
 }
 
-/* Checkbox Group in Modal */
+/* Checkbox Group in Modal - UPDATED */
 .checkbox-group {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 15px;
+  padding: 8px;
   border: 2px solid #ddd;
   border-radius: 8px;
   background-color: #fff;
   transition: all 0.3s ease;
   cursor: pointer;
   margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .checkbox-group:hover {
   border-color: #3498db;
-  background-color: #f8f9fa;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  transform: translateY(-2px);
+  background-color: rgba(52, 152, 219, 0.02);
 }
 
 .checkbox-group input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   margin: 0;
   cursor: pointer;
   position: relative;
@@ -1071,6 +1148,7 @@ button[type="submit"]:disabled {
 .checkbox-group input[type="checkbox"]:checked {
   background-color: #3498db;
   border-color: #3498db;
+  transform: scale(1.1);
 }
 
 .checkbox-group input[type="checkbox"]:checked::after {
@@ -1093,7 +1171,7 @@ button[type="submit"]:disabled {
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #2c3e50;
+  color: #1a3251;
   user-select: none;
   margin: 0;
   position: static;
@@ -1101,6 +1179,11 @@ button[type="submit"]:disabled {
   background-color: transparent;
   padding: 0;
   z-index: auto;
+  transition: color 0.3s ease;
+}
+
+.checkbox-group:hover label {
+  color: #3498db;
 }
 
 /* Media queries for responsiveness */
@@ -1110,6 +1193,46 @@ button[type="submit"]:disabled {
   .form-group textarea,
   .form-group select {
     padding: 12px 15px;
+  }
+
+  /* Responsive styles for new fields - UPDATED */
+  .pic-holder {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    margin: 8px 0 6px 0;
+  }
+
+  .pics-received {
+    font-size: 0.8rem;
+    margin: 8px 0 6px 0;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .status {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .checkbox-wrapper {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .checkbox-wrapper input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .checkbox-wrapper label {
+    font-size: 0.9rem;
+  }
+
+  .modal-pic-holder,
+  .modal-pics-received {
+    margin: 12px 0;
+    padding: 12px 15px;
+    font-size: 0.9rem;
   }
 }
 
@@ -1124,6 +1247,71 @@ button[type="submit"]:disabled {
 
   .form-group label {
     font-size: 0.9rem;
+  }
+
+  /* Enhanced mobile responsiveness for new fields - UPDATED */
+  .pic-holder {
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    margin: 6px 0 4px 0;
+    border-radius: 8px;
+  }
+
+  .pics-received {
+    font-size: 0.75rem;
+    margin: 6px 0 4px 0;
+    gap: 4px;
+    flex-wrap: wrap;
+    padding: 8px 10px;
+  }
+
+  .status {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border-radius: 8px;
+  }
+
+  .checkbox-wrapper {
+    padding: 10px 12px;
+    gap: 8px;
+    min-width: 150px;
+  }
+
+  .checkbox-wrapper input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .checkbox-wrapper label {
+    font-size: 0.85rem;
+  }
+
+  .checkbox-group {
+    padding: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .checkbox-group label {
+    font-size: 0.9rem;
+  }
+
+  .modal-pic-holder,
+  .modal-pics-received {
+    margin: 10px 0;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .modal-pics-received .status.received,
+  .modal-pics-received .status.pending {
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 }
 
